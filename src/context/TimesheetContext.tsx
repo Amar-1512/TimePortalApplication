@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, ReactNode, useMemo } from 'react';
+import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { Timesheet, TimeEntry, DailyTotal } from '../types';
 import { getStartOfWeek, getEndOfWeek, formatDateToLocalString } from '../utils/dateUtils';
 import { useAuth } from '../hooks/useAuth';
@@ -279,12 +279,20 @@ const fetchTimesheets = async () => {
     }
   };
 
-  const submitTimesheet = async (timesheet: Timesheet) => {
+const submitTimesheet = async (timesheet: Timesheet) => {
     if (!currentUser) {
       showAlert('Error: User not logged in.');
       return;
     }
     if (guardPending()) {
+      return;
+    }
+    // Check if any entries have non-zero hours
+    const totalHours = timesheet.entries.reduce((sum, entry) => {
+      return sum + (entry.mon || 0) + (entry.tue || 0) + (entry.wed || 0) + (entry.thu || 0) + (entry.fri || 0) + (entry.sat || 0) + (entry.sun || 0);
+    }, 0);
+    if (totalHours === 0) {
+      showAlert('Please fill up the entries');
       return;
     }
     const updated = {
@@ -296,24 +304,8 @@ const fetchTimesheets = async () => {
     showAlert('Timesheet submitted');
   };
 
-  const guardPending = (): boolean => {
-    if (!currentUser) return false;
-
-    // MODIFICATION START: Filter pending timesheets by currentUser.id
-    const pendingTimesheets = timesheets.filter(ts =>
-      ts.weekStart !== null &&
-      ts.weekStart !== null &&
-      ts.status === 'not-submitted' &&
-      getStartOfWeek(new Date(ts.weekStart)).getTime() !== currentWeekStartInternal.getTime() &&
-      ts.employeeName === currentUser.displayName
-    );
-    // MODIFICATION END
-
-    if (pendingTimesheets.length > 0) {
-      showAlert(`You have ${pendingTimesheets.length} pending timesheet${pendingTimesheets.length > 1 ? 's' : ''}.`);
-      return true;
-    }
-
+const guardPending = (): boolean => {
+    // Disable pending timesheet alert as per user request
     return false;
   };
 
