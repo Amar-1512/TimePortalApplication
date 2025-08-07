@@ -1,6 +1,7 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '../types';
+import { currentConfig } from '../config';
 
 interface AuthContextType {
   currentUser: User | null;
@@ -33,7 +34,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (email: string, password: string): Promise<User | null> => {
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
+      const response = await fetch(`${currentConfig.API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +82,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return false;
     }
     try {
-      const response = await fetch('http://localhost:8080/api/auth/change-password', {
+      const response = await fetch(`${currentConfig.API_BASE_URL}/api/auth/change-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
