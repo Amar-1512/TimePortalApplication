@@ -9,15 +9,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class CorsConfig {
 
   @Bean
-public WebMvcConfigurer corsConfigurer() {
+  public WebMvcConfigurer corsConfigurer() {
     return new WebMvcConfigurer() {
-        @Override
-        public void addCorsMappings(CorsRegistry registry) {
-            registry.addMapping("/**")
-                    .allowedOrigins("http://localhost:3000") // frontend URL
-                    .allowedMethods("*")
-                    .allowCredentials(true);
-        }
+      @Override
+      public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+            .allowedOrigins(
+                "http://localhost:3000", // local dev frontend
+                "https://timeportalapplication-production.up.railway.app" // Railway frontend
+            )
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowCredentials(true);
+      }
     };
   }
 
