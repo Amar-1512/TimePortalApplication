@@ -12,6 +12,7 @@ import com.example.timeentrysystem.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 public class SecurityConfig {
@@ -40,15 +41,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            .cors().and()
             .csrf().disable()
             .authorizeHttpRequests()
-            .requestMatchers("/api/users/**").permitAll()
-            .requestMatchers("/api/timesheet-entries/**").permitAll()
-            .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/auth/**", "/api/users/**", "/api/timesheet/**", "/actuator/health").permitAll()
             .anyRequest().authenticated()
             .and()
             .authenticationProvider(authenticationProvider())
-            .httpBasic().disable();
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }
 }
