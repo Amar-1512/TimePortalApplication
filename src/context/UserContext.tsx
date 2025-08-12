@@ -25,7 +25,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8080/api/users');
+      // Local setup
+      // const response = await fetch('http://localhost:8080/api/users');
+      
+      // Railway production setup
+      const response = await fetch('https://timeportalapplication-production.up.railway.app/api/users');
       if (!response.ok) {
         throw new Error('Failed to fetch users');
       }
