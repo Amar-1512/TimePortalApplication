@@ -14,12 +14,11 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        // Local setup
-                        // .allowedOrigins("http://localhost:5173")
-                        // Railway production setup
-                        .allowedOrigins("https://timeportalapplication-production.up.railway.app")
+                        .allowedOriginPatterns("*") // Allow all origins in production
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowCredentials(true);
+                        .allowedHeaders("*")
+                        .allowCredentials(true)
+                        .maxAge(3600);
             }
         };
     }
