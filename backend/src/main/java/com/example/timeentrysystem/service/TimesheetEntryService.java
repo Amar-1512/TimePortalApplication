@@ -22,7 +22,7 @@ public class TimesheetEntryService {
         return repository.findByEmployeeName(employeeName);
     }
 
-    // Removed getEntriesByEmployeeId method as employeeId does not exist in entity
+
 
     public Optional<TimesheetEntry> getEntryById(Long id) {
         return repository.findById(id);
